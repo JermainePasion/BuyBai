@@ -40,12 +40,11 @@ app.post('/api/products', async (req, res) => {
     res.status(200).json(product);
   }
   catch{(error) => {
-      res.status(500).json({message: error.message})
+      res.status(500).json({message: error.message});
   }
 
   }
 });
-
 
 // Update product by ID
 app.put('/api/product/:id', async (req, res) => {
@@ -64,6 +63,24 @@ app.put('/api/product/:id', async (req, res) => {
     res.status(500).json({message: error.message});
 
   }
+});
+
+// Delete product by ID
+app.delete('/api/product/:id', async(req, res) => {
+  try{
+    const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
+    if(!product){
+      return res.status(404).json({message: "Product not found"});
+    }
+    res.status(200).json({message: "Product deleted successfully"});
+
+  }
+  catch (error) {
+    res.status(500).json({message: error.message});
+
+  }
+
 });
 
 mongoose.connect
