@@ -65,6 +65,9 @@ const deleteProduct = async (req, res) => {
 
 
 
+
+
+
 module.exports = {
     getProducts,
     getProduct,
