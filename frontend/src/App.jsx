@@ -1,22 +1,21 @@
 import React, { useState, useMemo } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider, createTheme, CssBaseline, IconButton } from "@mui/material";
-import { Brightness4, Brightness7 } from "@mui/icons-material";
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 
 import LandingScreen from "./screens/LandingScreen";
 import HomeScreen from "./screens/HomeScreen";
 import CartScreen from "./screens/CartScreen";
 import ProductScreen from "./screens/ProductScreen";
+import ResponsiveAppBar from "./layouts/Navbar";
 
 function App() {
   const [mode, setMode] = useState("light");
 
-  // memoize the theme to avoid recreation on every render
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          mode, // 👈 switches between light/dark
+          mode,
           primary: {
             main: "#3396D3",
           },
@@ -29,18 +28,21 @@ function App() {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline /> 
+      <CssBaseline />
       <Router>
-        <div style={{ position: "fixed", top: 16, right: 16, zIndex: 9999 }}>
-          <IconButton onClick={toggleDarkMode} color="inherit">
-            {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
-          </IconButton>
-        </div>
+        {/* 🔹 pass toggleDarkMode + mode */}
+        <ResponsiveAppBar
+          setSearchTerm={setSearchTerm}
+          toggleDarkMode={toggleDarkMode}
+          mode={mode}
+        />
         <Routes>
           <Route path="/" element={<LandingScreen />} />
-          <Route path="/home" element={<HomeScreen />} />
+          <Route path="/home" element={<HomeScreen searchTerm={searchTerm} />} />
           <Route path="/cart" element={<CartScreen />} />
           <Route path="/product/:id" element={<ProductScreen />} />
         </Routes>
