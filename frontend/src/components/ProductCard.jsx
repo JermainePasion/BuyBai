@@ -1,22 +1,23 @@
+import { useNavigate } from "react-router-dom";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
-import Button from '@mui/material/Button';
-import CardActions from '@mui/material/CardActions';
 
 export default function ProductCard({ product }) {
+  const navigate = useNavigate();
   return (
     <Card
       sx={{
-        width: 300,               // consistent width
+        width: 300,           
         borderRadius: 2,
         boxShadow: 3,
       }}
+      onClick={() => navigate(`/product/${product._id}`)}
     >
       <CardActionArea>
-        {/* Fixed image box with "contain" to avoid cutting */}
+
         <CardMedia
           component="img"
           image={product.image}
@@ -28,7 +29,6 @@ export default function ProductCard({ product }) {
         />
 
         <CardContent>
-          {/* Truncate long product names */}
           <Typography
             gutterBottom
             variant="h6"

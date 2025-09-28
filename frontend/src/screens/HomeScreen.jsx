@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../layouts/DashboardLayouts';
-import ProductCard from '../componentss/ProductCard';
+import ProductCard from '../components/ProductCard';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 

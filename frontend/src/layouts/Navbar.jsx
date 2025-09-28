@@ -30,7 +30,7 @@ function ResponsiveAppBar({ setSearchTerm, toggleDarkMode, mode }) {
     <AppBar position="static" sx={{ backgroundColor: "#3396D3" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* Left side logo */}
+       
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
