@@ -5,10 +5,10 @@ const {getProducts, getProduct, createProduct, updateProduct, deleteProduct } = 
 
 
 //get all products
-router.get('/', getProducts);
+router.get("/", getProducts);
 //get product by id
 router.get("/:id", getProduct); 
-//create route
+//create
 router.post("/", createProduct);
 //update
 router.put("/:id", updateProduct);
