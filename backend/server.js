@@ -2,7 +2,7 @@ require("dotenv").config();               // <-- load variables first
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-
+const cors = require("cors");  
 const Product = require("./models/product.model.js");
 const productRoute = require("./routes/product.route.js");
 const usersRoute = require("./routes/user.route.js");
@@ -12,6 +12,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const users = [];
+
+app.use(cors({
+  origin: "http://localhost:5173",   // allow your frontend dev server
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 // user routes
 app.use("/users/login", usersRoute);
@@ -57,3 +63,5 @@ mongoose
     });
   })
   .catch(err => console.error("Error connecting to MongoDB:", err));
+
+app.use(cors());
