@@ -1,43 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import DashboardLayout from '../layouts/DashboardLayouts';
-import ProductCard from '../components/ProductCard';
-import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
+import React, { useEffect, useState } from "react";
+import DashboardLayout from "../layouts/DashboardLayouts";
+import ProductCard from "../components/ProductCard";
+import CategoriesSidebar from "../components/CategoriesSidebar";
+import RightSidebar from "../components/RightSidebar";
 
-function HomeScreen({ searchTerm }) {
+function HomeScreen({ searchTerm, mode }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/products/')
-      .then(res => res.json())
-      .then(data => setProducts(data))
-      .catch(err => console.error('Error fetching products:', err));
+    fetch("http://localhost:3000/api/products/")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
-  // ✅ Filter products by searchTerm
   const filteredProducts = products.filter((p) =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <DashboardLayout>
-      <Container sx={{ py: 4 }}>
-        <Grid container spacing={3}>
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <Grid item key={product._id} xs={12} sm={6} md={4}>
-                <ProductCard product={product} />
-              </Grid>
-            ))
-          ) : (
-            <Grid item xs={12}>
-              <p style={{ textAlign: 'center', color: 'gray' }}>
+      <div className="flex flex-col md:flex-row gap-6 min-h-screen">
+        {/* Sidebar: centered on mobile, left-aligned on desktop */}
+        <aside className="w-full md:w-64 flex justify-center md:justify-start">
+          <CategoriesSidebar />
+        </aside>
+
+        {/* Products: take remaining space */}
+        <div className="flex-1 flex justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))
+            ) : (
+              <p className="col-span-full text-center text-gray-500">
                 No products found.
               </p>
-            </Grid>
-          )}
-        </Grid>
-      </Container>
+            )}
+          </div>
+        </div>
+        <aside className="w-full md:w-auto flex justify-center md:justify-start">
+          <RightSidebar />
+        </aside>
+      </div>
     </DashboardLayout>
   );
 }

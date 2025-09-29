@@ -4,7 +4,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="h-screen flex flex-col">
       <div className="pt-16 flex">
-        <main className="flex-1 md:ml-56 p-6 overflow-y-auto">
+        <main className="flex-1 p-6 overflow-y-auto">
           {children}
         </main>
       </div>
@@ -13,3 +13,4 @@ const DashboardLayout = ({ children }) => {
 };
 
 export default DashboardLayout;
+
