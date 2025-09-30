@@ -35,7 +35,7 @@ function HomeScreen({ searchTerm, mode }) {
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
-                No products found.
+                No product found.
               </p>
             )}
           </div>
