@@ -13,11 +13,15 @@ import AdbIcon from "@mui/icons-material/Adb";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import TextField from "@mui/material/TextField";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
-const pages = ["Products", <ShoppingCartIcon />];
+const pages = [
+  { name: "Products", path: "/" },
+];
 
-function ResponsiveAppBar({ setSearchTerm, toggleDarkMode, mode }) {
+function Navbar({ setSearchTerm, toggleDarkMode, mode }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -25,18 +29,20 @@ function ResponsiveAppBar({ setSearchTerm, toggleDarkMode, mode }) {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+  const handleCartClick = () => {
+    navigate("/cart");
+  };
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "#3396D3" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-       
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="/home"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -50,7 +56,6 @@ function ResponsiveAppBar({ setSearchTerm, toggleDarkMode, mode }) {
             BUY-BAI
           </Typography>
 
-          {/* Mobile menu */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -64,62 +69,67 @@ function ResponsiveAppBar({ setSearchTerm, toggleDarkMode, mode }) {
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
               keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
+              transformOrigin={{ vertical: "top", horizontal: "left" }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
             >
-              {pages.map((page, idx) => (
-                <MenuItem key={idx} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
+              {pages.map((page) => (
+                <MenuItem
+                  key={page.name}
+                  onClick={() => {
+                    navigate(page.path);
+                    handleCloseNavMenu();
+                  }}
+                >
+                  <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem onClick={handleCartClick}>
+                <ShoppingCartIcon sx={{ mr: 1 }} /> Cart
+              </MenuItem>
             </Menu>
           </Box>
 
-          {/* Desktop nav buttons */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page, idx) => (
+            {pages.map((page) => (
               <Button
-                key={idx}
-                onClick={handleCloseNavMenu}
+                key={page.name}
+                onClick={() => navigate(page.path)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>
 
-          {/* Search + Dark mode toggle (right side) */}
           <TextField
             variant="outlined"
             size="small"
             placeholder="Search products..."
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{
-              backgroundColor: "white",   
-              input: {
-                color: "black",           
-              },
+              backgroundColor: "white",
+              input: { color: "black" },
               borderRadius: 1,
               mr: 2,
               width: { xs: "120px", sm: "200px", md: "250px" },
             }}
           />
-          <IconButton onClick={toggleDarkMode} color="inherit">
+
+          <IconButton onClick={toggleDarkMode} color="inherit" sx={{ mr: 1 }}>
             {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
+
+          <IconButton color="inherit" onClick={handleCartClick}>
+            <ShoppingCartIcon />
           </IconButton>
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+
+export default Navbar;
