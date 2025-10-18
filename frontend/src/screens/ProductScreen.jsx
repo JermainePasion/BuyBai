@@ -18,7 +18,7 @@ function ProductScreen() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     fetch(`http://localhost:3000/api/products/${id}`)
       .then((res) => res.json())

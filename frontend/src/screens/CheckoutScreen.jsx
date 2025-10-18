@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
 
 function CheckoutScreen() {
-  const { cartItems, completeTransaction} = useCart();
+  const { cartItems, completeTransaction } = useCart();
   const [deliveryMethod, setDeliveryMethod] = useState("delivery");
   const [discountCode, setDiscountCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(0);

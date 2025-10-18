@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { useCart } from "../context/CartContext";
+import { useCartContext } from "../context/CartContext";
 import { getCart } from "../api/cart";
 
 import { Container, Typography, Button, Box, Divider } from "@mui/material";
 
 function CartScreen() {
-  const { cartItems, removeFromCart, clearCart } = useCart();
+  const { cartItems, removeFromCart, clearCart } = useCartContext();
 
   useEffect(() => {
     const fetchCart = async () => {

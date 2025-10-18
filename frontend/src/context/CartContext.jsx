@@ -1,48 +1,30 @@
+// src/context/CartContext.jsx
+import { createContext, useContext } from "react";
+import { useCart } from "../hooks/useCart";
 
-import { createContext, useContext, useState, useEffect } from "react";
-import { addToCart as apiAddToCart, checkoutCart, getCart } from "../api/cart";
-
+// Create context
 const CartContext = createContext();
 
-export const useCart = () => useContext(CartContext);
-
+// Context provider
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
-
-
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const cart = await getCart();
-        setCartItems(cart);
-      } catch (err) {
-        console.error("Error fetching cart:", err);
-      }
-    };
-    fetchCart();
-  }, []);
-
-  const addToCart = async (product) => {
-    try {
-      const updatedCart = await apiAddToCart(product);
-      setCartItems(updatedCart);
-    } catch (err) {
-      console.error("Error adding to cart:", err);
-    }
-  };
-
-  const completeTransaction = async () => {
-    try {
-      await checkoutCart();
-      setCartItems([]); // clear frontend cart
-    } catch (err) {
-      console.error("Error during checkout:", err);
-    }
-  };
+  const cart = useCart(); // Use your custom hook here
 
   return (
-    <CartContext.Provider value={{ cartItems, setCartItems, addToCart, completeTransaction }}>
+    <CartContext.Provider value={cart}>
       {children}
     </CartContext.Provider>
   );
 };
+
+// Custom hook for consuming context
+export const useCartContext = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error("useCartContext must be used within a CartProvider");
+  }
+  return context;
+};
+
+// ✅ Export alias so `useCart` can be imported directly
+export { useCartContext as useCart };
+    

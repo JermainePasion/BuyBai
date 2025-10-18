@@ -7,10 +7,13 @@ import CartScreen from "./screens/CartScreen";
 import ProductScreen from "./screens/ProductScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import ResponsiveAppBar from "./layouts/Navbar";
+
+// ✅ Import your CartProvider (which uses useCart internally)
 import { CartProvider } from "./context/CartContext";
 
 function App() {
   const [mode, setMode] = useState("light");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const theme = useMemo(
     () =>
@@ -26,11 +29,10 @@ function App() {
   const toggleDarkMode = () =>
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
 
-  const [searchTerm, setSearchTerm] = useState("");
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {/* ✅ Wrap the entire app with CartProvider */}
       <CartProvider>
         <Router>
           <ResponsiveAppBar
@@ -38,6 +40,7 @@ function App() {
             toggleDarkMode={toggleDarkMode}
             mode={mode}
           />
+
           <Routes>
             <Route path="/" element={<HomeScreen searchTerm={searchTerm} />} />
             <Route path="/cart" element={<CartScreen />} />
