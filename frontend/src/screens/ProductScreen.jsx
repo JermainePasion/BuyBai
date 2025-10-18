@@ -11,12 +11,14 @@ import {
   Box,
   Container,
 } from "@mui/material";
+import { useCart } from "../context/CartContext";
 
 function ProductScreen() {
+  const { addToCart } = useCart();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     fetch(`http://localhost:3000/api/products/${id}`)
       .then((res) => res.json())
@@ -73,9 +75,13 @@ function ProductScreen() {
                 Stock: {product.quantity}
               </Typography>
 
-              <Box sx={{ flexGrow: 1 }} /> 
+              <Box sx={{ flexGrow: 1 }} />
 
-              <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+                onClick={() => addToCart(product)}>
                 Add to Cart
               </Button>
             </CardContent>

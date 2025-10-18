@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { useCart } from "../context/CartContext";
 
 function CheckoutScreen() {
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems, completeTransaction} = useCart();
   const [deliveryMethod, setDeliveryMethod] = useState("delivery");
   const [discountCode, setDiscountCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(0);
@@ -35,20 +36,32 @@ function CheckoutScreen() {
   const shipping = subtotal > 0 ? 100 : 0;
   const total = subtotal - discount + shipping;
 
-  const handlePayNow = () => {
-    alert("Processing payment...");
-  };
+  const handlePayNow = async () => {
+  if (window.confirm("Are you sure you want to complete this transaction?")) {
+    await completeTransaction();
+    alert("✅ Transaction Completed!");
+  }
+
+  if (window.confirm("Are you sure you want to complete this transaction?")) {
+    completeTransaction();
+    alert("✅ Transaction Completed!");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+        {/* LEFT SIDE — Shipping Info */}
         <div className="bg-white p-8 lg:p-12">
           <div className="max-w-2xl">
             <h1 className="text-4xl font-bold text-gray-900 mb-8">Checkout</h1>
 
             <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Shipping information</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">
+                Shipping information
+              </h2>
 
+              {/* Delivery Method */}
               <div className="flex gap-4 mb-6">
                 <button
                   onClick={() => setDeliveryMethod("delivery")}
@@ -99,48 +112,27 @@ function CheckoutScreen() {
                 </button>
               </div>
 
+              {/* FORM FIELDS */}
               <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 mb-1">
-                    Full Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="Enter full name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 mb-1">
-                    Email address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter email address"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 mb-1">
-                    Phone number <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleChange}
-                    placeholder="Enter phone number"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                {[
+                  { name: "fullName", label: "Full Name", type: "text" },
+                  { name: "email", label: "Email address", type: "email" },
+                  { name: "phoneNumber", label: "Phone number", type: "tel" },
+                ].map(({ name, label, type }) => (
+                  <div key={name}>
+                    <label className="block text-sm font-medium text-gray-900 mb-1">
+                      {label} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type={type}
+                      name={name}
+                      value={formData[name]}
+                      onChange={handleChange}
+                      placeholder={`Enter ${label.toLowerCase()}`}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                ))}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-900 mb-1">
@@ -160,39 +152,29 @@ function CheckoutScreen() {
                 </div>
 
                 <div className="grid grid-cols-3 gap-4">
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    placeholder="City"
-                    className="col-span-1 px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                  />
-                  <input
-                    type="text"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleChange}
-                    placeholder="State"
-                    className="col-span-1 px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                  />
-                  <input
-                    type="text"
-                    name="zipCode"
-                    value={formData.zipCode}
-                    onChange={handleChange}
-                    placeholder="ZIP Code"
-                    className="col-span-1 px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                  />
+                  {["city", "state", "zipCode"].map((field) => (
+                    <input
+                      key={field}
+                      type="text"
+                      name={field}
+                      value={formData[field]}
+                      onChange={handleChange}
+                      placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                      className="col-span-1 px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    />
+                  ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
+        {/* RIGHT SIDE — Order Summary */}
         <div className="bg-gray-50 p-8 lg:p-12">
           <div className="max-w-xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Order Summary
+            </h2>
 
             {cartItems.length === 0 ? (
               <div className="bg-white rounded-xl shadow-sm p-12 text-center">
@@ -212,7 +194,9 @@ function CheckoutScreen() {
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">
                   Your cart is empty
                 </h2>
-                <p className="text-gray-500 mb-4">Add items before checking out</p>
+                <p className="text-gray-500 mb-4">
+                  Add items before checking out
+                </p>
               </div>
             ) : (
               <>
@@ -239,6 +223,25 @@ function CheckoutScreen() {
                   )}
                 </div>
 
+                {/* Cart Items */}
+                <div className="bg-white rounded-lg p-4 mb-4">
+                  {cartItems.map((item) => (
+                    <div
+                      key={item._id}
+                      className="flex justify-between items-center border-b border-gray-100 py-2"
+                    >
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-sm text-gray-500">Qty: {item.qty}</p>
+                      </div>
+                      <p className="font-semibold">
+                        ₱{(item.price * item.qty).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Totals */}
                 <div className="bg-white rounded-lg p-6 space-y-3 mb-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Subtotal</span>
@@ -266,10 +269,7 @@ function CheckoutScreen() {
                   </div>
                 </div>
 
-                <button
-                  onClick={handlePayNow}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-lg transition-colors"
-                >
+                <button onClick={handlePayNow}>
                   Pay Now
                 </button>
               </>

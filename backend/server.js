@@ -6,6 +6,8 @@ const cors = require("cors");
 const Product = require("./models/product.model.js");
 const productRoute = require("./routes/product.route.js");
 const usersRoute = require("./routes/user.route.js");
+const cartRoute = require("./routes/cart.route.js");
+
 
 const app = express();
 app.use(express.json());
@@ -49,8 +51,12 @@ app.post("/users/login", async (req, res) => {
   }
 });
 
+
 // product routes
 app.use("/api/products", productRoute);
+
+// cart routes
+app.use("/api/cart", cartRoute);
 
 app.get("/", (req, res) => res.send("Hello from Node API"));
 

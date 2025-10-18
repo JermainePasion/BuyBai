@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 
@@ -7,9 +7,11 @@ import CartScreen from "./screens/CartScreen";
 import ProductScreen from "./screens/ProductScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import ResponsiveAppBar from "./layouts/Navbar";
+import { CartProvider } from "./context/CartContext";
 
 function App() {
   const [mode, setMode] = useState("light");
+
   const theme = useMemo(
     () =>
       createTheme({
@@ -25,51 +27,25 @@ function App() {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("cartItems");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  const [appliedDiscount, setAppliedDiscount] = useState(0);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <ResponsiveAppBar
-          setSearchTerm={setSearchTerm}
-          toggleDarkMode={toggleDarkMode}
-          mode={mode}
-        />
-        <Routes>
-          <Route path="/" element={<HomeScreen searchTerm={searchTerm} />} />
-          <Route
-            path="/cart"
-            element={
-              <CartScreen
-                cartItems={cartItems}
-                setCartItems={setCartItems}
-                appliedDiscount={appliedDiscount}
-                setAppliedDiscount={setAppliedDiscount}
-              />
-            }
+      <CartProvider>
+        <Router>
+          <ResponsiveAppBar
+            setSearchTerm={setSearchTerm}
+            toggleDarkMode={toggleDarkMode}
+            mode={mode}
           />
-          <Route
-            path="/checkout"
-            element={
-              <CheckoutScreen
-                cartItems={cartItems}
-                appliedDiscount={appliedDiscount}
-              />
-            }
-          />
-          <Route path="/product/:id" element={<ProductScreen />} />
-        </Routes>
-      </Router>
+          <Routes>
+            <Route path="/" element={<HomeScreen searchTerm={searchTerm} />} />
+            <Route path="/cart" element={<CartScreen />} />
+            <Route path="/checkout" element={<CheckoutScreen />} />
+            <Route path="/product/:id" element={<ProductScreen />} />
+          </Routes>
+        </Router>
+      </CartProvider>
     </ThemeProvider>
   );
 }
