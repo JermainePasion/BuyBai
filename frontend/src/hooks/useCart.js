@@ -5,6 +5,7 @@ import {
   getAllProducts,
   getCart,
   validateVoucher,
+  removeFromCart as apiRemoveFromCart, // ✅ Added
 } from "../api/cart";
 
 export const useCart = () => {
@@ -14,18 +15,19 @@ export const useCart = () => {
   const [loading, setLoading] = useState(false);
 
   // 🛒 Fetch cart on mount
+  const fetchCart = async () => {
+    try {
+      setLoading(true);
+      const data = await getCart();
+      setCartItems(data);
+    } catch (err) {
+      console.error("Error fetching cart:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        setLoading(true);
-        const data = await getCart();
-        setCartItems(data);
-      } catch (err) {
-        console.error("Error fetching cart:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchCart();
   }, []);
 
@@ -55,6 +57,24 @@ export const useCart = () => {
     }
   };
 
+  // 🗑️ Remove from cart (backend + client)
+  const removeFromCart = async (id) => {
+    try {
+      setLoading(true);
+      await apiRemoveFromCart(id);
+      setCartItems((prev) => prev.filter((item) => item._id !== id));
+    } catch (err) {
+      console.error("Error removing item:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🧹 Clear cart
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   // 💳 Checkout
   const completeTransaction = async () => {
     try {
@@ -79,11 +99,15 @@ export const useCart = () => {
 
   return {
     cartItems,
+    setCartItems,
     products,
     voucher,
     loading,
     addToCart,
+    removeFromCart,
+    clearCart,
     completeTransaction,
     validateDiscount,
+    fetchCart,
   };
 };

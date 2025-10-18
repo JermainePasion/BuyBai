@@ -269,7 +269,17 @@ function CheckoutScreen() {
                   </div>
                 </div>
 
-                <button onClick={handlePayNow}>
+                <button
+                  onClick={handlePayNow}
+                  style={{
+                    backgroundColor: "#007bff",
+                    color: "white",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                  }}
+                >
                   Pay Now
                 </button>
               </>

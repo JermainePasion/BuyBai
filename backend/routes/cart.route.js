@@ -35,6 +35,18 @@ router.put("/add", async (req, res) => {
   }
 });
 
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  const index = cart.findIndex((item) => item._id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: "Item not found in cart" });
+  }
+
+  cart.splice(index, 1); // remove item
+  res.json(cart);
+});
+
 // 💳 Checkout (reduce product stock + clear cart)
 router.post("/checkout", async (req, res) => {
   try {

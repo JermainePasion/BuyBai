@@ -1,4 +1,3 @@
-// src/api/cart.js
 import axios from "axios";
 import {
   GET_CART,
@@ -20,6 +19,12 @@ export const addToCart = async (product) => {
 
 export const checkoutCart = async () => {
   const res = await axios.post(CHECKOUT_CART);
+  return res.data;
+};
+
+// ✅ Remove from cart (new)
+export const removeFromCart = async (id) => {
+  const res = await axios.delete(`${GET_CART}/${id}`); 
   return res.data;
 };
 
