@@ -1,19 +1,23 @@
 
 import axios from "axios";
+import {
+  GET_CART,
+  ADD_TO_CART,
+  CHECKOUT_CART,
+} from "../constant/paths";
 
-const API_BASE_URL = "http://localhost:3000/api";
 
 export const getCart = async () => {
-  const res = await axios.get(`${API_BASE_URL}/cart`);
+  const res = await axios.get(GET_CART);
   return res.data;
 };
 
 export const addToCart = async (product) => {
-  const res = await axios.put(`${API_BASE_URL}/cart/add`, { payload: product });
+  const res = await axios.put(ADD_TO_CART, { payload: product });
   return res.data;
 };
 
 export const checkoutCart = async () => {
-  const res = await axios.post(`${API_BASE_URL}/cart/checkout`);
+  const res = await axios.post(CHECKOUT_CART);
   return res.data;
 };
