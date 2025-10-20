@@ -3,12 +3,13 @@ import DashboardLayout from "../layouts/DashboardLayouts";
 import ProductCard from "../components/ProductCard";
 import CategoriesSidebar from "../components/CategoriesSidebar";
 import RightSidebar from "../components/RightSidebar";
+import { GET_ALL_PRODUCTS } from "../constant/paths";
 
 function HomeScreen({ searchTerm, mode }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/products/")
+    fetch(GET_ALL_PRODUCTS)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error("Error fetching products:", err));

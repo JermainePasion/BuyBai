@@ -12,6 +12,7 @@ import {
   Container,
 } from "@mui/material";
 import { useCart } from "../context/CartContext";
+import { GET_ALL_PRODUCTS } from "../constant/paths";
 
 function ProductScreen() {
   const { addToCart } = useCart();
@@ -20,7 +21,7 @@ function ProductScreen() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/products/${id}`)
+    fetch(GET_ALL_PRODUCTS)
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
